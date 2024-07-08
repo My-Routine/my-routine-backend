@@ -13,5 +13,9 @@ public class LikeController {
     // TODO : /likes/users/{user-id}, Post
 
     // TODO : /likes/users/{user-id}, Delete
-    
+
+    // TODO : /likes/boards/{board-id}, Post
+
+    // TODO : /likes/boards/{board-id}, Delete
+
 }

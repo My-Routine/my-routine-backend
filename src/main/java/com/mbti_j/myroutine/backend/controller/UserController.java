@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.UserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.request.UserInfoDto;
 import com.mbti_j.myroutine.backend.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
