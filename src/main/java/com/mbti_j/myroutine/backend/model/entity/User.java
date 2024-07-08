@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
-import com.mbti_j.myroutine.backend.model.dto.UserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.request.UserInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
