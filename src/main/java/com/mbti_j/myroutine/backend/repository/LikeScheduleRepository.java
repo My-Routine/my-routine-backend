@@ -1,5 +1,8 @@
 package com.mbti_j.myroutine.backend.repository;
 
-public class LikeScheduleRepository {
+import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LikeScheduleRepository extends JpaRepository<LikeSchedule, Long> {
 
 }

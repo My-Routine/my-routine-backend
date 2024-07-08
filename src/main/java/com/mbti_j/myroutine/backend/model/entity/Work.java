@@ -1,5 +1,6 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,17 +13,17 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-public class LikeSchedule {
+public class Work {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Column(length = 32)
+    private String title;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "work_category_small_id")
+    private WorkCategorySmall workCategorySmall;
 
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
 }

@@ -6,24 +6,35 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.sql.Time;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @ToString
 @Entity
-public class LikeUser {
+public class DayScheduleWorkInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_from_id")
-    private User userFrom;
+    @JoinColumn(name = "day_schedule_id")
+    private DaySchedule daySchedule;
 
     @ManyToOne
-    @JoinColumn(name = "user_to_id")
-    private User userTo;
+    @JoinColumn(name = "work_id")
+    private Work work;
 
+    @DateTimeFormat
+    private Time startAt;
+
+    @DateTimeFormat
+    private Time endAt;
+
+    @ManyToOne
+    @JoinColumn(name = "alert_type_id")
+    private AlertType alertType;
 }

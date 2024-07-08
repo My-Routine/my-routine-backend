@@ -3,26 +3,26 @@ package com.mbti_j.myroutine.backend.model.entity;
 import com.mbti_j.myroutine.backend.model.dto.UserInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import java.sql.Date;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @Entity
+@EntityListeners(AuditingEntityListener.class) // Listener
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(length = 10)
     private String username;
@@ -41,6 +41,7 @@ public class User {
     private String img;
 
     @Column(length = 15)
+    @CreatedDate
     private Date createdAt;
 
     @Column(length = 15)

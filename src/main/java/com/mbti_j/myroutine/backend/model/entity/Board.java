@@ -18,19 +18,25 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class) // Listener
-public class Schedule {
+public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(length = 20)
+
+    @Column(length = 64)
     private String title;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
     @CreatedDate
     private Date createdAt;
+
 }

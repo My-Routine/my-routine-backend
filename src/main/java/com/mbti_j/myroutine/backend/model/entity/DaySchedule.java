@@ -12,17 +12,17 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-public class LikeSchedule {
+public class DaySchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+    
+    private Integer day;
+
+    private String type;
 }
