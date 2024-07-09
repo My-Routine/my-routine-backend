@@ -1,17 +1,17 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @ToString
 @Entity
-@Table(name = "like_user", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_from_id", "user_to_id"})
-})
 public class LikeUser {
 
     @Id
