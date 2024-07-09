@@ -49,16 +49,16 @@ CREATE TABLE `work_category_large`
     `title` VARCHAR(32)        NOT NULL,
     PRIMARY KEY (`id`)
 );
-INSERT INTO work_category_large
+INSERT INTO work_category_large(id, title)
 VALUES (1, '운동');
 
-INSERT INTO work_category_large
+INSERT INTO work_category_large(id, title)
 VALUES (2, '공부');
 
-INSERT INTO work_category_large
+INSERT INTO work_category_large(id, title)
 VALUES (3, '잠');
 
-INSERT INTO work_category_large
+INSERT INTO work_category_large(id, title)
 VALUES (4, '기타');
 # ---------------------------------------------------------
 use myroutine;
@@ -74,18 +74,18 @@ ALTER TABLE `work_category_small`
     ADD CONSTRAINT `fk_work_category_small_work_category_large_id` FOREIGN KEY (`work_category_large_id`)
         REFERENCES `work_category_large` (`id`);
 
-INSERT INTO work_category_small
+INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (1, 1, '헬스');
-INSERT INTO work_category_small
+INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (2, 1, '필라테스');
-INSERT INTO work_category_small
+INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (3, 1, '요가');
 
-INSERT INTO work_category_small
+INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (1, 2, '자격증');
-INSERT INTO work_category_small
+INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (2, 2, '전공 공부');
-INSERT INTO work_category_small
+INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (3, 2, '교양 공부');
 # ---------------------------------------------------------
 use myroutine;
@@ -97,11 +97,11 @@ CREATE TABLE `alert_type`
     PRIMARY KEY (`id`)
 );
 
-INSERT INTO alert_type
+INSERT INTO alert_type(id, name)
 VALUES (1, '카카오톡');
-INSERT INTO alert_type
+INSERT INTO alert_type(id, name)
 VALUES (2, '문자');
-INSERT INTO alert_type
+INSERT INTO alert_type(id, name)
 VALUES (3, '이메일');
 # ---------------------------------------------------------
 use myroutine;
@@ -146,26 +146,26 @@ ALTER TABLE `day_schedule`
 
 # day, schedule_id 묶어서 unique
 # 1,2,3,4,5,6,7 : 월화수목금토일
-INSERT INTO day_schedule
-VALUES (1, 1, 1, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (1, 1, 1, 'fact');
 
-INSERT INTO day_schedule
-VALUES (2, 1, 2, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (2, 1, 2, 'fact');
 
-INSERT INTO day_schedule
-VALUES (3, 1, 3, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (3, 1, 3, 'fact');
 
-INSERT INTO day_schedule
-VALUES (4, 1, 4, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (4, 1, 4, 'fact');
 
-INSERT INTO day_schedule
-VALUES (5, 1, 5, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (5, 1, 5, 'fact');
 
-INSERT INTO day_schedule
-VALUES (5, 1, 6, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (5, 1, 6, 'fact');
 
-INSERT INTO day_schedule
-VALUES (5, 1, 7, 1, 'fact');
+INSERT INTO day_schedule(id, schedule_id, day, type)
+VALUES (5, 1, 7, 'fact');
 # ---------------------------------------------------------
 # 네이밍 생각하기
 use myroutine;
@@ -188,23 +188,23 @@ ALTER TABLE `day_schedule_work_info`
         REFERENCES `alert_type` (`id`);
 ALTER TABLE `day_schedule_work_info`
     ADD CONSTRAINT `fk_work_schedule_id` FOREIGN KEY (`day_schedule_id`)
-        REFERENCES `day_schecule` (`id`);
+        REFERENCES `day_schedule` (`id`);
 # ---------------------------------------------------------
 
 use myroutine;
 DROP TABLE IF EXISTS `work`;
 CREATE TABLE `work`
 (
-    `id`                  INT AUTO_INCREMENT NOT NULL,
-    `title`               VARCHAR(32)        NOT NULL,
-    `work_category_small` INT                NULL,
+    `id`                     INT AUTO_INCREMENT NOT NULL,
+    `title`                  VARCHAR(32)        NOT NULL,
+    `work_category_small_id` INT                NULL,
     PRIMARY KEY (`id`)
 );
 ALTER TABLE `work`
-    ADD CONSTRAINT `fk_work_work_category_small` FOREIGN KEY (`work_category_small`)
+    ADD CONSTRAINT `fk_work_work_category_small_id` FOREIGN KEY (`work_category_small_id`)
         REFERENCES `work_category_small` (`id`);
 
-INSERT INTO work
+INSERT INTO work(id, title, work_category_small_id)
 VALUES (1, '헬스장', 1);
 # ---------------------------------------------------------
 use myroutine;
@@ -225,7 +225,7 @@ ALTER TABLE `like_schedule`
     ADD CONSTRAINT `fk_like_schedule_schedule_id` FOREIGN KEY (`schedule_id`)
         REFERENCES `schedule` (`id`);
 
-INSERT INTO like_schedule
+INSERT INTO like_schedule(id, user_id, schedule_id)
 VALUES (1, 1, 1);
 # ---------------------------------------------------------
 use myroutine;
