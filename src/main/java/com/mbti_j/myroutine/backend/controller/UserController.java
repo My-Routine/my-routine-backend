@@ -1,6 +1,7 @@
 package com.mbti_j.myroutine.backend.controller;
 
 import com.mbti_j.myroutine.backend.model.dto.request.UserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.response.UserSignUpDto;
 import com.mbti_j.myroutine.backend.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,6 +18,17 @@ public class UserController {
 
     private final UserService userService;
 
+    /*
+     * 회원가입
+     */
+    @PostMapping("/users")
+    public ResponseEntity<?> signUpUser(@RequestBody UserSignUpDto userSignUpDto) {
+        try {
+            return ResponseEntity.ok(userService.signUpUser(userSignUpDto));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage() + "다시 시도해주세요" );
+        }
+    }
     /*
      * 유저 정보 가져오기
      */

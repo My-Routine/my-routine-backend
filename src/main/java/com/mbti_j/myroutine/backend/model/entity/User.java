@@ -9,8 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import java.sql.Date;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -41,7 +44,7 @@ public class User {
     private String img;
 
     @Column(length = 15)
-    @CreatedDate
+    @CreationTimestamp
     private Date createdAt;
 
     @Column(length = 15)
@@ -49,6 +52,17 @@ public class User {
 
     @Column(length = 15)
     private String token;
+
+    public User(){}
+
+    @Builder
+    public User(String username, String passwordHash, String email, String phone, String img) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.email = email;
+        this.phone = phone;
+        this.img = img;
+    }
 
     public UserInfoDto toUserInfoDto() {
 
