@@ -82,11 +82,11 @@ INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (3, 1, '요가');
 
 INSERT INTO work_category_small(id, work_category_large_id, title)
-VALUES (1, 2, '자격증');
+VALUES (4, 2, '자격증');
 INSERT INTO work_category_small(id, work_category_large_id, title)
-VALUES (2, 2, '전공 공부');
+VALUES (5, 2, '전공 공부');
 INSERT INTO work_category_small(id, work_category_large_id, title)
-VALUES (3, 2, '교양 공부');
+VALUES (6, 2, '교양 공부');
 # ---------------------------------------------------------
 use myroutine;
 DROP TABLE IF EXISTS `alert_type`;
@@ -109,7 +109,7 @@ DROP TABLE IF EXISTS `schedule`;
 CREATE TABLE `schedule`
 (
     `id`         INT AUTO_INCREMENT     NOT NULL,
-    'user_id'    INT                    NOT NULL,
+    `user_id`    INT                    NOT NULL,
     `title`      VARCHAR(20)            NOT NULL,
     `created_at` DATETIME DEFAULT NOW() NOT NULL,
     PRIMARY KEY (`id`)
@@ -162,10 +162,27 @@ INSERT INTO day_schedule(id, schedule_id, day, type)
 VALUES (5, 1, 5, 'fact');
 
 INSERT INTO day_schedule(id, schedule_id, day, type)
-VALUES (5, 1, 6, 'fact');
+VALUES (6, 1, 6, 'fact');
 
 INSERT INTO day_schedule(id, schedule_id, day, type)
-VALUES (5, 1, 7, 'fact');
+VALUES (7, 1, 7, 'fact');
+# ---------------------------------------------------------
+
+use myroutine;
+DROP TABLE IF EXISTS `work`;
+CREATE TABLE `work`
+(
+    `id`                     INT AUTO_INCREMENT NOT NULL,
+    `title`                  VARCHAR(32)        NOT NULL,
+    `work_category_small_id` INT                NULL,
+    PRIMARY KEY (`id`)
+);
+ALTER TABLE `work`
+    ADD CONSTRAINT `fk_work_work_category_small_id` FOREIGN KEY (`work_category_small_id`)
+        REFERENCES `work_category_small` (`id`);
+
+INSERT INTO work(id, title, work_category_small_id)
+VALUES (1, '헬스장', 1);
 # ---------------------------------------------------------
 # 네이밍 생각하기
 use myroutine;
@@ -191,22 +208,6 @@ ALTER TABLE `day_schedule_work_info`
         REFERENCES `day_schedule` (`id`);
 # ---------------------------------------------------------
 
-use myroutine;
-DROP TABLE IF EXISTS `work`;
-CREATE TABLE `work`
-(
-    `id`                     INT AUTO_INCREMENT NOT NULL,
-    `title`                  VARCHAR(32)        NOT NULL,
-    `work_category_small_id` INT                NULL,
-    PRIMARY KEY (`id`)
-);
-ALTER TABLE `work`
-    ADD CONSTRAINT `fk_work_work_category_small_id` FOREIGN KEY (`work_category_small_id`)
-        REFERENCES `work_category_small` (`id`);
-
-INSERT INTO work(id, title, work_category_small_id)
-VALUES (1, '헬스장', 1);
-# ---------------------------------------------------------
 use myroutine;
 DROP TABLE IF EXISTS `like_schedule`;
 CREATE TABLE `like_schedule`
@@ -259,4 +260,4 @@ ALTER TABLE `like_board`
     ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 ALTER TABLE `like_board`
     ADD FOREIGN KEY (`board_id`) REFERENCES `board` (`id`);
-# ---------------------------------------------------------
+# ————————————————————————————
