@@ -9,4 +9,6 @@ public interface UserService {
     UserInfoDto getUserInfo(Long id);
 
     User signUpUser(UserSignUpDto userSignUpDto);
+
+    void withdrawUser(Long userId);
 }
