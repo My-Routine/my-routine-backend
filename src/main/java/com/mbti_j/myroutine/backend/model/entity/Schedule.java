@@ -1,6 +1,5 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
-import com.mbti_j.myroutine.backend.model.dto.request.ScheduleInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -51,20 +50,12 @@ public class Schedule {
     private Long hit;
 
     @Builder
-    public Schedule(Long id, User user, String title, List<DaySchedule> daySchedule, Date createdAt) {
+    public Schedule(Long id, User user, String title, List<DaySchedule> daySchedule,
+            Date createdAt) {
         this.id = id;
         this.user = user;
         this.title = title;
         this.createdAt = createdAt;
     }
 
-    public ScheduleInfoDto toScheduleInfoDto() {
-        return ScheduleInfoDto.builder()
-                .id(this.getId())
-//                .userId(this.getUser())
-                .daySchedules(this.daySchedules)
-                .title(this.getTitle())
-                .createdAt(this.getCreatedAt())
-                .build();
-    }
 }

@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpDto;
+import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpForm;
 import com.mbti_j.myroutine.backend.model.dto.response.UserMyDto;
 import com.mbti_j.myroutine.backend.model.dto.response.UserOtherDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
@@ -21,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public User signUpUser(UserSignUpDto userSignUpDto) {
+    public User signUpUser(UserSignUpForm userSignUpDto) {
         //파일 업로드 및 uuid 설정
         userSignUpDto.setPassword(passwordEncoder.encode(userSignUpDto.getPassword()));
         //dto -> entity

@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpDto;
+import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpForm;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
 import com.mbti_j.myroutine.backend.model.service.UserService;
@@ -29,7 +29,7 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/users")
-    public ResponseEntity<?> signUpUser(@Valid @RequestBody UserSignUpDto userSignUpDto,
+    public ResponseEntity<?> signUpUser(@Valid @RequestBody UserSignUpForm userSignUpDto,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);

@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.request.LoginFormDto;
+import com.mbti_j.myroutine.backend.model.dto.request.LoginForm;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +22,13 @@ public class AuthService {
         return userRepository.findById(1L).orElse(null);
     }
 
-    public boolean login(LoginFormDto loginFormDto) {
+    public boolean login(LoginForm loginFormDto) {
         // if -> false
         // 인증
         return true;
     }
 
-    public boolean logout(LoginFormDto loginFormDto) {
+    public boolean logout(LoginForm loginFormDto) {
         // if -> false
         // 인증
         return true;

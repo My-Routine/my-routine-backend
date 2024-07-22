@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserSignUpDto {
+public class UserSignUpForm {
 
     @NotEmpty(message = "Nickname is required")
     private String nickname;

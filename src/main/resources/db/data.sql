@@ -2,9 +2,6 @@
 CREATE SCHEMA IF NOT EXISTS myroutine default character set utf8mb4;
 USE myroutine;
 
-# TODO: user 총 5명
-
-# myroutine, myroutine
 INSERT INTO user(id, nickname, password_hash, email, phone, created_at)
 VALUES (1, 'user1', '0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90',
         'user1@gmail.com',
@@ -26,6 +23,7 @@ INSERT INTO work_category_small(id, work_category_large_id, title)
 VALUES (1, 1, '헬스'),
        (2, 1, '필라테스'),
        (3, 1, '요가'),
+
        (4, 2, '자격증'),
        (5, 2, '전공 공부'),
        (6, 2, '교양 공부');
@@ -56,7 +54,14 @@ VALUES (1, 1, 1, 'fact'),
 
 # TODO: work 데이터 넣기
 INSERT INTO work(id, title, work_category_small_id)
-VALUES (1, '헬스', 1);
+VALUES (1, '헬스장 가기', 1),
+       (2, '자격증 공부', 4);
+
+
+# WorkInfo
+INSERT INTO day_schedule_work_info(id, start_at, end_at, alert_type_id, day_schedule_id, work_id)
+VALUES (1, '11:30:00', '12:30:00', 1, 1, 1),
+       (2, '13:30:00', '15:30:00', 1, 1, 1);
 
 # TODO: 20개
 INSERT INTO like_schedule(id, user_id, schedule_id)

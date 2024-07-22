@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.request.LoginFormDto;
+import com.mbti_j.myroutine.backend.model.dto.request.LoginForm;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginFormDto loginFormDto) {
+    public ResponseEntity<?> login(@RequestBody LoginForm loginFormDto) {
         log.info("로그인 요청");
         //로그인 실패시
 
