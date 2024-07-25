@@ -1,6 +1,7 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.request.LoginFormDto;
+import com.mbti_j.myroutine.backend.model.dto.request.LoginRequestDto;
+import com.mbti_j.myroutine.backend.model.dto.response.LoginResponseDto;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-
+    
     @GetMapping
     public ResponseEntity<?> logout() {
         //로그아웃 실패시
@@ -29,11 +30,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginFormDto loginFormDto) {
-        log.info("로그인 요청");
-        //로그인 실패시
-
-        // 로그인 완료시
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        authService.login(loginRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
