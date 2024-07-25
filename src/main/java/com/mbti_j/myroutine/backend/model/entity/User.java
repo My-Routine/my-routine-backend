@@ -1,12 +1,12 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
+import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
 import java.sql.Timestamp;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,20 +24,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10)
+    @Column(length = 10, unique = true)
     private String nickname;
 
     @Column(length = 64)
     private String passwordHash;
 
     @Column(length = 30, unique = true)
-    @Email
+//    @Email
     private String email;
 
     @Column(length = 11)
     private String phone; // 010-5092-6683 X 01050926683 O
 
-    @Column(length = 20)
+    @Column(length = 80)
     private String img;
 
     @Column(length = 15)
@@ -47,7 +47,7 @@ public class User {
     @Column(length = 15)
     private Timestamp deletedAt;
 
-    @Column(length = 15)
+    @Column(length = 255)
     private String token;
 
     public User() {
@@ -64,6 +64,16 @@ public class User {
         this.token = token;
     }
 
+
+    public User signUpDtoToEntity(UserSignUpDto dto) {
+        return User.builder()
+                .nickname(dto.getNickname())
+                .passwordHash(dto.getPassword())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .img(dto.getImg())
+                .build();
+    }
 
     public void updateDeletedAt(Timestamp now) {
         this.deletedAt = now;

@@ -1,10 +1,9 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.request.LoginForm;
+import com.mbti_j.myroutine.backend.model.dto.request.LoginRequestDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+
 
     public User getLogInUser() {
         // 인증
@@ -22,13 +21,14 @@ public class AuthService {
         return userRepository.findById(1L).orElse(null);
     }
 
-    public boolean login(LoginForm loginFormDto) {
-        // if -> false
-        // 인증
-        return true;
+    @Transactional
+    public String login(LoginRequestDto loginRequestDto) {
+        //사용자 인증
+
+        return "";
     }
 
-    public boolean logout(LoginForm loginFormDto) {
+    public boolean logout(LoginRequestDto loginFormDto) {
         // if -> false
         // 인증
         return true;

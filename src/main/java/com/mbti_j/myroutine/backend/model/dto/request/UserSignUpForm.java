@@ -1,17 +1,17 @@
 package com.mbti_j.myroutine.backend.model.dto.request;
 
-import com.mbti_j.myroutine.backend.model.entity.User;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Valid
+//@Valid
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserSignUpForm {
 
@@ -32,14 +32,5 @@ public class UserSignUpForm {
 
     private String img;
 
-    public User toUserEntity() {
-        return User.builder()
-                .nickname(this.getNickname())
-                .passwordHash(this.getPassword())
-                .email(this.getEmail())
-                .phone(this.getPhone())
-                .img(this.getImg())
-                .build();
-    }
 }
 
