@@ -29,6 +29,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+
     public User signUpUser(UserSignUpDto userSignUpDto) {
         userSignUpDto.setPassword(passwordEncoder.encode(userSignUpDto.getPassword()));
         User user = new User();
