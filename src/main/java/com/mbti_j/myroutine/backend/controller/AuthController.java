@@ -1,13 +1,13 @@
 package com.mbti_j.myroutine.backend.controller;
 
 import com.mbti_j.myroutine.backend.model.dto.request.LoginRequestDto;
-import com.mbti_j.myroutine.backend.model.dto.response.LoginResponseDto;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,19 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    
-    @GetMapping
-    public ResponseEntity<?> logout() {
-        //로그아웃 실패시
 
-        // 로그아웃 완료시
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            authService.logout(token);
+        }
+        SecurityContextHolder.clearContext();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        authService.login(loginRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+        log.info("Auth Controller loginMethod 실행!!!");
+        String token = authService.login(loginRequestDto);
+        log.info("token : " + token + "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
 }
