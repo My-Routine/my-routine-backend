@@ -1,13 +1,20 @@
 package com.mbti_j.myroutine.backend.controller;
 
+import com.mbti_j.myroutine.backend.model.dto.response.LikeScheduleDto;
+import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
+import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.service.LikeService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -73,6 +80,23 @@ public class LikeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 인기 스케줄들 가져오기 - 스케줄 컨트롤러에 넣어야할지 고민
+    @GetMapping("/schedules/most-liked")
+    public ResponseEntity<Page<LikeScheduleDto>> getMostLikedSchedules(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<LikeScheduleDto> result = likeService.getSchedulesWithMostLikes(page, size);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    // 내가 좋아하는 스케줄들 가져오기 - 스케줄 컨트롤러에 넣어야할지 고민
+    @GetMapping("/schedules/list")
+    public ResponseEntity<Page<LikeScheduleDto>> getUserLikedSchedules(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Long userId = 1L; // 임의의 유저 ID 1로 지정
+        Page<LikeScheduleDto> result = likeService.getUserLikedSchedules(userId, page, size);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

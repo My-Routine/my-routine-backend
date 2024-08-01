@@ -4,6 +4,8 @@ import com.mbti_j.myroutine.backend.model.dto.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +25,12 @@ public class ScheduleService {
 //                Schedule::toScheduleInfoDto);
 //    }
 //
-    public ScheduleInfoDto getScheduleInfo(Long scheduleId) {
-        return scheduleRepository.findScheduleInfoDtoById(scheduleId).orElse(null);
+//    public ScheduleInfoDto getScheduleInfo(Long scheduleId) {
+//        return scheduleRepository.findScheduleInfoDtoById(scheduleId).orElse(null);
+//    }
+
+    public Page<ScheduleInfoDto> getUserSchedules(Long userId, int page, int size) {
+        return scheduleRepository.findSchedulesByUserId(userId, PageRequest.of(page, size));
     }
 
 //    public int deleteScheduleInfo(Long scheduleId) {

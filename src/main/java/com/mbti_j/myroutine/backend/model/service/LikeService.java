@@ -1,5 +1,6 @@
 package com.mbti_j.myroutine.backend.model.service;
 
+import com.mbti_j.myroutine.backend.model.dto.response.LikeScheduleDto;
 import com.mbti_j.myroutine.backend.model.entity.Board;
 import com.mbti_j.myroutine.backend.model.entity.LikeBoard;
 import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
@@ -14,6 +15,9 @@ import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -115,5 +119,17 @@ public class LikeService {
         return 1;
     }
 
+    public Page<LikeScheduleDto> getSchedulesWithMostLikes(int page, int size) {
+        return likeScheduleRepository.findSchedulesWithMostLikes(PageRequest.of(page, size));
+    }
+
+    public long getTotalCount() {
+        return likeScheduleRepository.count();
+    }
+
+    public Page<LikeScheduleDto> getUserLikedSchedules(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return likeScheduleRepository.findLikedSchedulesByUserId(userId, pageable);
+    }
 
 }

@@ -4,11 +4,13 @@ import com.mbti_j.myroutine.backend.model.dto.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.service.ScheduleService;
 import com.mbti_j.myroutine.backend.model.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,13 +36,21 @@ public class ScheduleController {
 //        return new ResponseEntity<>(schedules, HttpStatus.OK);
 //    }
 //
-    @GetMapping("/{schedule-id}")
-    public ResponseEntity<?> getScheduleInfo(@PathVariable("schedule-id") Long scheduleId) {
-        ScheduleInfoDto scheduleInfoDto = scheduleService.getScheduleInfo(scheduleId);
-        if (scheduleInfoDto == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(scheduleInfoDto, HttpStatus.OK);
+//    @GetMapping("/{schedule-id}")
+//    public ResponseEntity<?> getScheduleInfo(@PathVariable("schedule-id") Long scheduleId) {
+//        ScheduleInfoDto scheduleInfoDto = scheduleService.getScheduleInfo(scheduleId);
+//        if (scheduleInfoDto == null) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(scheduleInfoDto, HttpStatus.OK);
+//    }
+
+    @GetMapping("/user-schedules")
+    public ResponseEntity<Page<ScheduleInfoDto>> getUserSchedules(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Long userId = 1L; // 임의의 유저 ID 1로 지정
+        Page<ScheduleInfoDto> result = scheduleService.getUserSchedules(userId, page, size);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 //
 //

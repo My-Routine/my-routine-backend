@@ -6,11 +6,8 @@ import java.util.List;
 
 public interface ScheduleInfoDto {
 
-    Long getId();
-
-    String getTitle();
-
+    Long getScheduleId();
+    String getScheduleTitle();
+    String getUserNickname();
     Date getCreatedAt();
-
-    List<DaySchedule> getDaySchedules();
 }
