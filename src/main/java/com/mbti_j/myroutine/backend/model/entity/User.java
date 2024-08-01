@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
-import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

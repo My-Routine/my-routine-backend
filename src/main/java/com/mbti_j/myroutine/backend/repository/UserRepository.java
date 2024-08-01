@@ -1,7 +1,7 @@
 package com.mbti_j.myroutine.backend.repository;
 
-import com.mbti_j.myroutine.backend.model.dto.response.UserMyDto;
-import com.mbti_j.myroutine.backend.model.dto.response.UserOtherDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserMyDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserOtherDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.mbti_j.myroutine.backend.model.dto.request;
+package com.mbti_j.myroutine.backend.model.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

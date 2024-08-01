@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.request.LoginRequestDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginRequestDto;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

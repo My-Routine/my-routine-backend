@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
 import com.mbti_j.myroutine.backend.model.service.UserService;

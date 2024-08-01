@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.security.jwt;
 
-import com.mbti_j.myroutine.backend.model.dto.common.LoginUserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

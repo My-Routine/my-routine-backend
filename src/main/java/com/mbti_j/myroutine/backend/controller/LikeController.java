@@ -1,10 +1,7 @@
 package com.mbti_j.myroutine.backend.controller;
 
-import com.mbti_j.myroutine.backend.model.dto.response.LikeScheduleDto;
-import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
-import com.mbti_j.myroutine.backend.model.entity.Schedule;
+import com.mbti_j.myroutine.backend.model.dto.schedule.LikeScheduleDto;
 import com.mbti_j.myroutine.backend.model.service.LikeService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -90,9 +87,11 @@ public class LikeController {
         Page<LikeScheduleDto> result = likeService.getSchedulesWithMostLikes(page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     // 내가 좋아하는 스케줄들 가져오기 - 스케줄 컨트롤러에 넣어야할지 고민
     @GetMapping("/schedules/list")
-    public ResponseEntity<Page<LikeScheduleDto>> getUserLikedSchedules(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<LikeScheduleDto>> getUserLikedSchedules(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Long userId = 1L; // 임의의 유저 ID 1로 지정
         Page<LikeScheduleDto> result = likeService.getUserLikedSchedules(userId, page, size);

@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.response.LikeScheduleDto;
+import com.mbti_j.myroutine.backend.model.dto.schedule.LikeScheduleDto;
 import com.mbti_j.myroutine.backend.model.entity.Board;
 import com.mbti_j.myroutine.backend.model.entity.LikeBoard;
 import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;

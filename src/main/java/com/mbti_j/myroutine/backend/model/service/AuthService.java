@@ -1,7 +1,7 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.common.LoginUserInfoDto;
-import com.mbti_j.myroutine.backend.model.dto.request.LoginRequestDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginRequestDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import com.mbti_j.myroutine.backend.security.jwt.JwtUtil;

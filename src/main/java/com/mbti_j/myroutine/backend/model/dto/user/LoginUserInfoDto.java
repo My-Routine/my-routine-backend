@@ -1,4 +1,4 @@
-package com.mbti_j.myroutine.backend.model.dto.common;
+package com.mbti_j.myroutine.backend.model.dto.user;
 
 import lombok.Builder;
 import lombok.Data;

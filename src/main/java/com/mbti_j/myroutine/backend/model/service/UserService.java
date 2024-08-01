@@ -1,8 +1,8 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.request.UserSignUpDto;
-import com.mbti_j.myroutine.backend.model.dto.response.UserMyDto;
-import com.mbti_j.myroutine.backend.model.dto.response.UserOtherDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserMyDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserOtherDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import java.io.File;

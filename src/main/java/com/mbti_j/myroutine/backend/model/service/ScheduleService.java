@@ -1,11 +1,11 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.response.ScheduleInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.schedule.ScheduleInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.schedule.ScheduleSearchFilter;
+import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
-import com.mbti_j.myroutine.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
     //    public Page<ScheduleInfoDto> getAllSchedulesInfo(Pageable pageable) {
 //        return scheduleRepository.findAll(pageable).map(
@@ -29,8 +29,10 @@ public class ScheduleService {
 //        return scheduleRepository.findScheduleInfoDtoById(scheduleId).orElse(null);
 //    }
 
-    public Page<ScheduleInfoDto> getUserSchedules(Long userId, int page, int size) {
-        return scheduleRepository.findSchedulesByUserId(userId, PageRequest.of(page, size));
+    public Page<ScheduleInfoDto> searchScheduleListByFilter(
+            ScheduleSearchFilter scheduleSearchFilter) {
+        User logInUser = authService.getLogInUser();
+        return scheduleRepository.selectScheduleListByFilter(scheduleSearchFilter, logInUser);
     }
 
 //    public int deleteScheduleInfo(Long scheduleId) {
@@ -72,6 +74,4 @@ public class ScheduleService {
 //        scheduleRepository.save(scheduleEntity);
 //        return 1;
 //    }
-
-
 }

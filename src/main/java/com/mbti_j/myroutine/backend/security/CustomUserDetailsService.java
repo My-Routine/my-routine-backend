@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.security;
 
-import com.mbti_j.myroutine.backend.model.dto.common.LoginUserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

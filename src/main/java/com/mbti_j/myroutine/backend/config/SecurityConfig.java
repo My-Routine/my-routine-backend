@@ -40,7 +40,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/popular", "/signup", "/login").permitAll()
+                                .requestMatchers("/**").permitAll()
+//                        .requestMatchers("/auth/login", "/popular", "/signup", "/login").permitAll()
                         .anyRequest().authenticated()       //그 외 요청은 인증 받은 사람만 접근 가능
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
