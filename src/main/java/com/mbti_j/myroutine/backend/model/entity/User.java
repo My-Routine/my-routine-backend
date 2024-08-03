@@ -75,6 +75,10 @@ public class User {
                 .build();
     }
 
+    public void updateRefreshToken(String refreshToken) {
+        this.token = refreshToken;
+    }
+
     public void updateDeletedAt(Timestamp now) {
         this.deletedAt = now;
     }

@@ -8,6 +8,9 @@ import com.mbti_j.myroutine.backend.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,25 +26,28 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User getLogInUser() {
+    public User getLoginUser() {
         // 인증
-        // Test
-        return userRepository.findById(1L).orElse(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        String email;
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        } else {
+            email = authentication.getPrincipal().toString();
+        }
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
-
-    @Transactional
+    
     public String login(LoginRequestDto loginRequestDto) {
-        //사용자 인증
-        log.info("AuthService 로그인 메서드 실행!@@@@@@@@@@@");
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            log.info("이메일 존재 x!@@@@@@@@@@@");
-            throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("이메일이 존재하지 않습니다."));
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            log.info("비밀번호 일치 x!@@@@@@@@@@@");
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
         //Entity -> dto
@@ -50,13 +56,22 @@ public class AuthService {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .build();
-        log.info("호출직전@#@#################");
-        return jwtUtil.createAccessToken(loginUserInfoDto);
+
+        String accessToken = jwtUtil.createAccessToken(loginUserInfoDto);
+        String refreshToken = user.getToken();
+        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
+            refreshToken = jwtUtil.createRefreshToken(loginUserInfoDto);
+            user.updateRefreshToken(refreshToken);
+            userRepository.save(user);
+        }
+        return accessToken;
     }
 
-    public boolean logout(String token) {
-        //리프레시토큰 사용하게 되면 리프레시 토큰 삭제 로직 추가
-        return true;
+    @Transactional
+    public void logout(String token) {
+        User user = userRepository.findById(jwtUtil.getUserId(token))
+                .orElseThrow(() -> new UsernameNotFoundException("회원을 찾을 수 없습니다."));
+        user.updateRefreshToken(null);
     }
 
 //    public Optional authenticateUser(UserLoginDto userLoginDto) {

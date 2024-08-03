@@ -34,9 +34,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
-        log.info("Auth Controller loginMethod 실행!!!");
         String token = authService.login(loginRequestDto);
-        log.info("token : " + token + "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 

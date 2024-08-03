@@ -11,10 +11,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,30 +22,34 @@ public class JwtUtil {
 
     private final Key key;
     private final long accessTokenExpTime;
-    private final Set<String> blacklist = Collections.synchronizedSet(new HashSet<>());
+    private final long refreshTokenExpTime;
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretKey,
-            @Value(("${jwt.access-token.expire-time}")) long accessTokenExpTime
+            @Value(("${jwt.access-token.expire-time}")) long accessTokenExpTime,
+            @Value(("${jwt.refresh-token.expire-time}")) long refreshTokenExpTime
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpTime = accessTokenExpTime;
+        this.refreshTokenExpTime = refreshTokenExpTime;
     }
 
     public String createAccessToken(LoginUserInfoDto loginUserInfoDto) {
-        log.info("JwtUtil createAccessToken 실행!@!@!@!@!@!@");
         return createToken(loginUserInfoDto, accessTokenExpTime);
     }
 
-    private String createToken(LoginUserInfoDto user, long accessTokenExpTime) {
+    public String createRefreshToken(LoginUserInfoDto loginUserInfoDto) {
+        return createToken(loginUserInfoDto, refreshTokenExpTime);
+    }
+
+    private String createToken(LoginUserInfoDto user, long expTime) {
         Claims claims = Jwts.claims();
         claims.put("userId", user.getId());
         claims.put("nickname", user.getNickname());
         claims.put("email", user.getEmail());
-        log.info(claims.toString());
         ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime tokenValidity = now.plusSeconds(accessTokenExpTime);
+        ZonedDateTime tokenValidity = now.plusSeconds(expTime);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -88,9 +89,9 @@ public class JwtUtil {
     /*
      * JWT Claims 추출
      */
-    private Claims parseClaims(String accessToken) {
+    private Claims parseClaims(String token) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken)
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();

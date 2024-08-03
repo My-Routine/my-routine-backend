@@ -59,7 +59,7 @@ public class UserController {
      */
     @DeleteMapping("/users/{user-id}")
     public ResponseEntity<?> withdrawUser(@PathVariable("user-id") Long userId) {
-        User loginuser = authService.getLogInUser();
+        User loginuser = authService.getLoginUser();
         if (loginuser == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -98,7 +98,7 @@ public class UserController {
      */
     @GetMapping("/users/{user-id}")
     public ResponseEntity<?> getUserInfo(@PathVariable("user-id") Long userId) {
-        User loginuser = authService.getLogInUser();
+        User loginuser = authService.getLoginUser();
         if (loginuser == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

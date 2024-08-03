@@ -31,7 +31,7 @@ public class ScheduleService {
 
     public Page<ScheduleInfoDto> searchScheduleListByFilter(
             ScheduleSearchFilter scheduleSearchFilter) {
-        User logInUser = authService.getLogInUser();
+        User logInUser = authService.getLoginUser();
         return scheduleRepository.selectScheduleListByFilter(scheduleSearchFilter, logInUser);
     }
 
