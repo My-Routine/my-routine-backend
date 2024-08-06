@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long>,
         ScheduleCustomRepository {
 
-//    Optional<ScheduleInfoDto> findScheduleInfoDtoById(Long id);
+    //Optional<ScheduleInfoDto> findScheduleInfoDtoById(Long id);
 
     @Query("SELECT s.id AS scheduleId, s.title AS scheduleTitle, s.user.nickname AS userNickname, s.createdAt AS createdAt "
             +

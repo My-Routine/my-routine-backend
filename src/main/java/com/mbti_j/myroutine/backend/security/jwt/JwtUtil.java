@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.security.jwt;
 
-import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDtoForJwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -35,15 +35,15 @@ public class JwtUtil {
         this.refreshTokenExpTime = refreshTokenExpTime;
     }
 
-    public String createAccessToken(LoginUserInfoDto loginUserInfoDto) {
-        return createToken(loginUserInfoDto, accessTokenExpTime);
+    public String createAccessToken(LoginUserInfoDtoForJwt loginUserInfoDtoForJwt) {
+        return createToken(loginUserInfoDtoForJwt, accessTokenExpTime);
     }
 
-    public String createRefreshToken(LoginUserInfoDto loginUserInfoDto) {
-        return createToken(loginUserInfoDto, refreshTokenExpTime);
+    public String createRefreshToken(LoginUserInfoDtoForJwt loginUserInfoDtoForJwt) {
+        return createToken(loginUserInfoDtoForJwt, refreshTokenExpTime);
     }
 
-    private String createToken(LoginUserInfoDto user, long expTime) {
+    private String createToken(LoginUserInfoDtoForJwt user, long expTime) {
         Claims claims = Jwts.claims();
         claims.put("userId", user.getId());
         claims.put("nickname", user.getNickname());

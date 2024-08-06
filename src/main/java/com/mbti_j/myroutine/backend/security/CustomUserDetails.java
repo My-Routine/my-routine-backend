@@ -1,6 +1,6 @@
 package com.mbti_j.myroutine.backend.security;
 
-import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDtoForJwt;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final LoginUserInfoDto loginUserInfoDto;
+    private final LoginUserInfoDtoForJwt loginUserInfoDtoForJwt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -22,12 +22,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return loginUserInfoDto.getPassword();
+        return loginUserInfoDtoForJwt.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return loginUserInfoDto.getEmail();
+        return loginUserInfoDtoForJwt.getEmail();
     }
 
     @Override

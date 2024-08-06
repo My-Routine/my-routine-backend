@@ -1,7 +1,7 @@
 package com.mbti_j.myroutine.backend.model.service;
 
 import com.mbti_j.myroutine.backend.model.dto.user.LoginRequestDto;
-import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.user.LoginUserInfoDtoForJwt;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import com.mbti_j.myroutine.backend.security.jwt.JwtUtil;
@@ -41,7 +41,7 @@ public class AuthService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
-    
+
     public String login(LoginRequestDto loginRequestDto) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
@@ -51,16 +51,16 @@ public class AuthService {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
         //Entity -> dto
-        LoginUserInfoDto loginUserInfoDto = LoginUserInfoDto.builder()
+        LoginUserInfoDtoForJwt loginUserInfoDtoForJwt = LoginUserInfoDtoForJwt.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .build();
 
-        String accessToken = jwtUtil.createAccessToken(loginUserInfoDto);
+        String accessToken = jwtUtil.createAccessToken(loginUserInfoDtoForJwt);
         String refreshToken = user.getToken();
         if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
-            refreshToken = jwtUtil.createRefreshToken(loginUserInfoDto);
+            refreshToken = jwtUtil.createRefreshToken(loginUserInfoDtoForJwt);
             user.updateRefreshToken(refreshToken);
             userRepository.save(user);
         }

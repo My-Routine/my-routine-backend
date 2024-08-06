@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LoginUserInfoDto {
+public class LoginUserInfoDtoForJwt {
 
     private Long id;
     private String nickname;

@@ -1,12 +1,13 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.user.UserMyDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserInfoResponseDto;
 import com.mbti_j.myroutine.backend.model.dto.user.UserOtherDto;
 import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,8 +53,6 @@ public class UserService {
 
     public String imgUpload(MultipartFile profileImg) {
         String originalFilename = profileImg.getOriginalFilename();
-        System.out.println(originalFilename);
-        System.out.println(UUID.randomUUID() + "_" + originalFilename);
         File uploadPath = new File(profileUploadFolder, "uploadFolder");
         if (!uploadPath.exists()) {
             uploadPath.mkdirs();
@@ -65,7 +64,7 @@ public class UserService {
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-        return uuidImg;
+        return "http://localhost:8082/uploadFolder/" + uuidImg;
     }
 
     @Transactional
@@ -82,8 +81,21 @@ public class UserService {
 
     }
 
-    public UserMyDto getMyInfo(Long userId) {
-        return userRepository.findMyDtoByIdAndDeletedAtNull(userId).orElse(null);
+    public UserInfoResponseDto getMyInfo(Long userId) {
+        Optional<User> userOptional = userRepository.findMyDtoByIdAndDeletedAtNull(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return UserInfoResponseDto.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .nickname(user.getNickname())
+                    .phone(user.getPhone())
+                    .createAt(new Date(user.getCreatedAt().getTime()))
+                    .img(user.getImg())
+                    .build();
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 
     public UserOtherDto getOtherInfo(Long userId) {
