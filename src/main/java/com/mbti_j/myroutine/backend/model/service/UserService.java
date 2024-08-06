@@ -29,6 +29,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
 
     public User signUpUser(UserSignUpDto userSignUpDto) {
@@ -110,5 +111,13 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-
+    @Transactional
+    public void modifyProfileImg(MultipartFile profileImg) {
+        log.info("UserService modifyProfileImg =============> ");
+        Long userId = authService.getLoginUser().getId();
+        log.info("UserService Success getLoginUser =============> " + userId);
+        String imgPath = imgUpload(profileImg);
+        log.info("UserService Success imgUpload =============> " + imgPath);
+        userRepository.updateProfileImg(userId, imgPath);
+    }
 }

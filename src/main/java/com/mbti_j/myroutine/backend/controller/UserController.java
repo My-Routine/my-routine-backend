@@ -4,6 +4,7 @@ import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
 import com.mbti_j.myroutine.backend.model.service.UserService;
+import jakarta.persistence.PersistenceException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -111,8 +112,21 @@ public class UserController {
     }
 
     /*
-     *  로그인한 유저 정보 가져오기
+     *  회원 정보 수정 (프로필이미지)
      */
+    @PostMapping("/users/modifyProfileImg")
+    public ResponseEntity<?> signUpUser(@RequestPart("profileImg") MultipartFile ProfileImg) {
+        log.info("UserController modifyProfileImg() ==========>");
+        try {
+            userService.modifyProfileImg(ProfileImg);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (PersistenceException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

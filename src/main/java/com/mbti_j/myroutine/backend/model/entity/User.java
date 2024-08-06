@@ -37,7 +37,7 @@ public class User {
     @Column(length = 11)
     private String phone; // 010-5092-6683 X 01050926683 O
 
-    @Column(length = 80)
+    @Column(length = 255)
     private String img;
 
     @Column(length = 15)
