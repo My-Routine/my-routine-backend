@@ -112,12 +112,26 @@ public class UserService {
     }
 
     @Transactional
-    public void modifyProfileImg(MultipartFile profileImg) {
-        log.info("UserService modifyProfileImg =============> ");
+    public void updateProfileImg(MultipartFile profileImg) {
         Long userId = authService.getLoginUser().getId();
-        log.info("UserService Success getLoginUser =============> " + userId);
         String imgPath = imgUpload(profileImg);
-        log.info("UserService Success imgUpload =============> " + imgPath);
         userRepository.updateProfileImg(userId, imgPath);
+    }
+
+    @Transactional
+    public boolean checkPassword(String inputPassword) {
+        Long userId = authService.getLoginUser().getId();
+        String getPassword = userRepository.findPasswordById(userId);
+
+        return passwordEncoder.matches(inputPassword, getPassword);
+    }
+
+    @Transactional
+    public void updatePassword(String newPassword) {
+        Long userId = authService.getLoginUser().getId();
+        String passwordHash = passwordEncoder.encode(newPassword);
+        System.out.println("new PasswordHash : " + passwordHash);
+        userRepository.updatePasswordById(userId, passwordHash);
+
     }
 }

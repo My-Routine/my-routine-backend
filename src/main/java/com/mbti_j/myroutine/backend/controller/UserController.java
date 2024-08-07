@@ -1,5 +1,6 @@
 package com.mbti_j.myroutine.backend.controller;
 
+import com.mbti_j.myroutine.backend.model.dto.user.ModifyPasswordRequestDto;
 import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
@@ -118,13 +119,30 @@ public class UserController {
     public ResponseEntity<?> signUpUser(@RequestPart("profileImg") MultipartFile ProfileImg) {
         log.info("UserController modifyProfileImg() ==========>");
         try {
-            userService.modifyProfileImg(ProfileImg);
+            userService.updateProfileImg(ProfileImg);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (PersistenceException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /*
+     * 비밀번호 수정
+     */
+    @PostMapping("/users/modifyPassword")
+    public ResponseEntity<?> modifyPassword(
+            @RequestBody ModifyPasswordRequestDto modifyPasswordRequestDto) {
+        log.info("modifyPassword 메서드 실행");
+        log.info("modifyPasswordRequestDto: " + modifyPasswordRequestDto.toString());
+        if (userService.checkPassword(modifyPasswordRequestDto.getCurrentPassword())) {
+            userService.updatePassword(modifyPasswordRequestDto.getNewPassword());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            String msg = "입력하신 비밀번호가 일치하지 않습니다";
+            return new ResponseEntity<>(msg, HttpStatus.UNAUTHORIZED);
         }
     }
 
