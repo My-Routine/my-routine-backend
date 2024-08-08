@@ -1,4 +1,4 @@
-package com.mbti_j.myroutine.backend.model.dto.schedule;
+package com.mbti_j.myroutine.backend.model.dto.schedule.request;
 
 import com.mbti_j.myroutine.backend.model.constant.SearchType;
 import lombok.AllArgsConstructor;
