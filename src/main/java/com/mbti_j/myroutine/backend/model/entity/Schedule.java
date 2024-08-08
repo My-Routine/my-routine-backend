@@ -8,9 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import java.sql.Date;
-import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +20,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @ToString
 @Entity
-@EntityListeners(AuditingEntityListener.class) // Listener
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Schedule {
 
     @Id
@@ -36,26 +37,11 @@ public class Schedule {
     @Column(length = 20)
     private String title;
 
-    @Column(length = 20)
-    @CreationTimestamp
-    private Date createdAt;
-
-    @OneToMany
-    @JoinColumn(name = "schedule_id")
-    private List<DaySchedule> daySchedules;
+    private Long hit; // 조회수
 
     private Boolean visibility;
 
-    // default : 0
-    private Long hit;
-
-    @Builder
-    public Schedule(Long id, User user, String title, List<DaySchedule> daySchedule,
-            Date createdAt) {
-        this.id = id;
-        this.user = user;
-        this.title = title;
-        this.createdAt = createdAt;
-    }
-
+    @Column(length = 20)
+    @CreationTimestamp
+    private Date createdAt;
 }

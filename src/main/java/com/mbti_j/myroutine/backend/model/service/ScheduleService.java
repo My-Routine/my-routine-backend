@@ -1,16 +1,17 @@
 package com.mbti_j.myroutine.backend.model.service;
 
-import com.mbti_j.myroutine.backend.model.dto.schedule.ScheduleInfoDto;
-import com.mbti_j.myroutine.backend.model.dto.schedule.ScheduleSearchFilter;
+import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleRegisterDto;
+import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleSearchFilter;
+import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleDetailDto;
+import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
+import com.mbti_j.myroutine.backend.model.dto.user.UserProfileDto;
+import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-//import java.util.ArrayList;
-//import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,14 +21,22 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final AuthService authService;
 
-    //    public Page<ScheduleInfoDto> getAllSchedulesInfo(Pageable pageable) {
-//        return scheduleRepository.findAll(pageable).map(
-//                Schedule::toScheduleInfoDto);
-//    }
-//
-//    public ScheduleInfoDto getScheduleInfo(Long scheduleId) {
-//        return scheduleRepository.findScheduleInfoDtoById(scheduleId).orElse(null);
-//    }
+    public Schedule selectScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId).orElseThrow();
+    }
+
+    public ScheduleDetailDto searchScheduleById(Long scheduleId) {
+        Schedule schedule = selectScheduleById(scheduleId);
+        return ScheduleDetailDto.builder()
+                .id(schedule.getId())
+                .title(schedule.getTitle())
+                .userProfileDto(UserProfileDto.builder()
+                        .nickname(schedule.getUser().getNickname())
+                        .img(schedule.getUser().getImg())
+                        .build())
+                .createdAt(schedule.getCreatedAt())
+                .build();
+    }
 
     public Page<ScheduleInfoDto> searchScheduleListByFilter(
             ScheduleSearchFilter scheduleSearchFilter) {
@@ -35,43 +44,17 @@ public class ScheduleService {
         return scheduleRepository.selectScheduleListByFilter(scheduleSearchFilter, logInUser);
     }
 
-//    public int deleteScheduleInfo(Long scheduleId) {
-//        User loginUser = userRepository.findById(1L).orElseThrow();
-//
-//        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
-//
-//        if (schedule.getId() == null) {
-//            return 0;
-//        }
-//
-//        if (loginUser.equals(
-//                schedule.getUser()) /* loginUser.getId() == schedule.getUser().getId() */) {
-//            return 0;
-//        }
-//
-//        scheduleRepository.deleteById(schedule.getId());
-//        return 1;
-//    }
-//
-//    public int saveScheduleInfo(ScheduleRegisterForm scheduleRegisterForm) {
-//        Schedule schedule = scheduleRegisterForm.toScheduleInfoEntity();
-//        if (schedule.getId() != null) {
-//            return 0;
-//        }
-//        scheduleRepository.save(schedule);
-//        return 1;
-//    }
+    public Schedule registerSchedule(ScheduleRegisterDto scheduleRegisterDto) {
+        User loginUser = authService.getLoginUser();
 
-//    public int updateScheduleInfo(Long scheduleId, ScheduleInfoDto scheduleInfoDto) {
-//        Schedule schedule = scheduleRepository.findById(scheduleId)
-//                .orElseThrow(() -> new RuntimeException("Schedule not found"));
-//        if (schedule.getId() == null) {
-//            return 0;
-//        }
-//        scheduleInfoDto.setId(scheduleId);
-//        Schedule scheduleEntity = scheduleInfoDto.toScheduleInfoEntity();
-//
-//        scheduleRepository.save(scheduleEntity);
-//        return 1;
-//    }
+        Schedule schedule = Schedule.builder()
+                .user(loginUser)
+                .title(scheduleRegisterDto.getTitle())
+                .hit(0L)
+                .visibility(scheduleRegisterDto.getVisibility())
+                .build();
+
+        return scheduleRepository.save(schedule);
+    }
+
 }
