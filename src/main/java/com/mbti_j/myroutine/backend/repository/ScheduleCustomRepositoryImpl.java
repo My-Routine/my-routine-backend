@@ -4,6 +4,7 @@ import com.mbti_j.myroutine.backend.model.constant.SearchType;
 import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleSearchFilter;
 import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.QDaySchedule;
+import com.mbti_j.myroutine.backend.model.entity.QLikeSchedule;
 import com.mbti_j.myroutine.backend.model.entity.QSchedule;
 import com.mbti_j.myroutine.backend.model.entity.QUser;
 import com.mbti_j.myroutine.backend.model.entity.QWork;
@@ -12,6 +13,7 @@ import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -32,6 +34,7 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
     private final QSchedule s = QSchedule.schedule;
     private final QDaySchedule ds = QDaySchedule.daySchedule;
     private final QWorkTime dswi = QWorkTime.workTime;
+    private final QLikeSchedule qls = QLikeSchedule.likeSchedule;
     private final QWork w = QWork.work;
     private final QUser u = QUser.user;
 
@@ -92,7 +95,7 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
     @Override
     public Page<ScheduleInfoDto> selectScheduleListByFilter(
             ScheduleSearchFilter scheduleSearchFilter, User loginUser) {
-        JPAQuery<ScheduleInfoDto> query = createSelectFromQuery();
+        JPAQuery<ScheduleInfoDto> query = createSelectFromQuery(loginUser);
         Pageable pageable = PageRequest.of(scheduleSearchFilter.getPage(),
                 scheduleSearchFilter.getSize());
 
@@ -112,13 +115,21 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private JPAQuery<ScheduleInfoDto> createSelectFromQuery() {
+    private JPAQuery<ScheduleInfoDto> createSelectFromQuery(User loginUser) {
         return queryFactory
                 .select(Projections.constructor(ScheduleInfoDto.class,
                         s.id,
                         s.title,
                         s.user,
-                        s.createdAt))
+                        s.createdAt,
+                        JPAExpressions.select(qls)
+                                .from(qls)
+                                .where(
+                                        qls.schedule.eq(s),
+                                        qls.user.id.eq(loginUser.getId())
+                                )
+                                .exists())
+                )
                 .from(s);
     }
 
