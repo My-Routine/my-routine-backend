@@ -27,6 +27,7 @@ public interface LikeScheduleRepository extends JpaRepository<LikeSchedule, Long
             "FROM LikeSchedule ls WHERE ls.user.id = :userId " +
             "GROUP BY ls.schedule.id, ls.schedule.title, ls.schedule.user.nickname " +
             "ORDER BY likeCount DESC")
+
     Page<LikeScheduleDto> findLikedSchedulesByUserId(@Param("userId") Long userId,
             Pageable pageable);
 

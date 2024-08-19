@@ -5,6 +5,7 @@ import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleSearchFil
 import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleDetailDto;
 import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.dto.user.UserProfileDto;
+import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
 import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
@@ -20,6 +21,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final AuthService authService;
+    private final LikeScheduleService likeScheduleService;
 
     public Schedule selectScheduleById(Long scheduleId) {
         return scheduleRepository.findById(scheduleId).orElseThrow();
@@ -27,6 +29,8 @@ public class ScheduleService {
 
     public ScheduleDetailDto searchScheduleById(Long scheduleId) {
         Schedule schedule = selectScheduleById(scheduleId);
+        User loginUser = authService.getLoginUser();
+
         return ScheduleDetailDto.builder()
                 .id(schedule.getId())
                 .title(schedule.getTitle())
@@ -35,13 +39,21 @@ public class ScheduleService {
                         .img(schedule.getUser().getImg())
                         .build())
                 .createdAt(schedule.getCreatedAt())
+                .likeStatus(loginUser != null ? likeScheduleService.selectLikeStatus(loginUser, schedule) : null)
                 .build();
     }
 
     public Page<ScheduleInfoDto> searchScheduleListByFilter(
             ScheduleSearchFilter scheduleSearchFilter) {
-        User logInUser = authService.getLoginUser();
-        return scheduleRepository.selectScheduleListByFilter(scheduleSearchFilter, logInUser);
+        User loginUser = authService.getLoginUser();
+
+        Page<ScheduleInfoDto> scheduleInfoDtoPage = scheduleRepository.selectScheduleListByFilter(scheduleSearchFilter, loginUser);
+        scheduleInfoDtoPage.map(scheduleInfoDto -> {
+            Schedule schedule = scheduleRepository.findById(scheduleInfoDto.getId()).orElse(null);
+            scheduleInfoDto.setLikeStatus(loginUser != null ? likeScheduleService.selectLikeStatus(loginUser, schedule) : null);
+            return scheduleInfoDto;
+        });
+        return scheduleInfoDtoPage;
     }
 
     public Schedule registerSchedule(ScheduleRegisterDto scheduleRegisterDto) {

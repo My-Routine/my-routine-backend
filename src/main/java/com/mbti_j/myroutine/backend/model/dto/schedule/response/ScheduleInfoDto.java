@@ -17,11 +17,13 @@ public class ScheduleInfoDto {
     private String title;
     private User user;
     private Date createdAt;
+    private Boolean likeStatus;
 
-    public ScheduleInfoDto(Long id, String title, User user, Date createdAt) {
+    public ScheduleInfoDto(Long id, String title, User user, Date createdAt, Boolean likeStatus) {
         this.id = id;
         this.title = title;
         this.user = user;
         this.createdAt = createdAt;
+        this.likeStatus = likeStatus;
     }
 }
