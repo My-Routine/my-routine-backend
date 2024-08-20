@@ -99,26 +99,7 @@ public class LikeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 인기 스케줄들 가져오기 - 스케줄 컨트롤러에 넣어야할지 고민
-    @GetMapping("/schedules/most-liked")
-    public ResponseEntity<Page<LikeScheduleDto>> getMostLikedSchedules(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<LikeScheduleDto> result = likeService.getSchedulesWithMostLikes(page, size);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 
-    // 내가 좋아하는 스케줄들 가져오기 - 스케줄 컨트롤러에 넣어야할지 고민
-    @GetMapping("/schedules/list")
-    public ResponseEntity<Page<LikeScheduleDto>> getUserLikedSchedules(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        User loginUser = authService.getLoginUser();
-        if (loginUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Page<LikeScheduleDto> result = likeService.getUserLikedSchedules(loginUser.getId(), page, size);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+
 
 }

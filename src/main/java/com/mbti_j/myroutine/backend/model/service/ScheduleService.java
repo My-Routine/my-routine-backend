@@ -9,8 +9,10 @@ import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
 import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,7 @@ public class ScheduleService {
                         .build())
                 .createdAt(schedule.getCreatedAt())
                 .likeStatus(loginUser != null ? likeScheduleService.selectLikeStatus(loginUser, schedule) : null)
+                .likeCount(likeScheduleService.getLikeCount(scheduleId))
                 .build();
     }
 
@@ -67,6 +70,21 @@ public class ScheduleService {
                 .build();
 
         return scheduleRepository.save(schedule);
+    }
+
+    public Page<ScheduleInfoDto> getLikedSchedules(int page, int size) {
+        // LikeService를 통해 로그인한 유저가 좋아요한 스케줄 ID 목록을 가져옴
+        List<Long> likedScheduleIds = likeScheduleService.getLikedScheduleIdsByLoginUser();
+
+        // 좋아요한 스케줄 ID로 스케줄 목록 필터링하여 반환
+        return scheduleRepository.findLikeSchedulesByIds(likedScheduleIds, page, size);
+    }
+
+    public Page<ScheduleInfoDto> getSchedulesOrderByLikes(int page, int size) {
+
+        List<Long> allLikeScheduleIds = likeScheduleService.getAllLikeScheduleIds();
+
+        return scheduleRepository.getSchedulesOrderedByLikes(allLikeScheduleIds, page, size);
     }
 
 }

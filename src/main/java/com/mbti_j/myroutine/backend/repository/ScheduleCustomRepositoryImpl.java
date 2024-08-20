@@ -38,54 +38,7 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
     private final QWork w = QWork.work;
     private final QUser u = QUser.user;
 
-//    @Override
-//    public ScheduleDetailDto searchScheduleDetailById(Long id) {
-//        // Schedule 데이터 가져오기
-//        Schedule schedule = queryFactory.selectFrom(s)
-//                .leftJoin(s.user, u).fetchJoin()
-//                .where(s.id.eq(id))
-//                .fetchOne();
-//
-//        // daySchedules 가져오기
-//        List<DaySchedule> daySchedules = queryFactory.selectFrom(ds)
-//                .where(ds.schedule.id.eq(schedule.getId()))
-//                .fetch();
-//
-//        // 각 daySchedule에 대해 dayScheduleWorkInfo 가져오기
-//        List<DayScheduleDetailDto> dayScheduleDetails = daySchedules.stream().map(daySchedule -> {
-//            List<WorkTimeDto> dayScheduleWorkInfos = queryFactory.select(
-//                            Projections.constructor(WorkTimeDto.class,
-//                                    dswi.id,
-//                                    w.title,
-//                                    dswi.startAt,
-//                                    dswi.endAt
-//                            ))
-//                    .from(dswi)
-//                    .leftJoin(dswi.work, w)
-//                    .where(dswi.daySchedule.id.eq(daySchedule.getId()))
-//                    .fetch();
-//
-//            return new DayScheduleDetailDto(
-//                    daySchedule.getId(),
-//                    daySchedule.getDay()
-//            );
-//        }).collect(Collectors.toList());
-//
-//        // UserDTO로 변환
-//        UserProfileDto userProfileDto = new UserProfileDto(schedule.getUser().getNickname(),
-//                schedule.getUser().getImg());
-//
-//        // ScheduleDetailDto로 변환
-//        return new ScheduleDetailDto(
-//                schedule.getId(),
-//                schedule.getTitle(),
-//                userProfileDto,
-//                schedule.getCreatedAt(),
-//                dayScheduleDetails
-//        );
-//
-//
-//    }
+
 
     @Override
     public Schedule saveSchedule(Schedule schedule) {
@@ -114,6 +67,40 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
 
         return new PageImpl<>(content, pageable, total);
     }
+    public Page<ScheduleInfoDto> findLikeSchedulesByIds(List<Long> scheduleIds, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        JPAQuery<ScheduleInfoDto> query = queryFactory
+                .select(Projections.constructor(ScheduleInfoDto.class,
+                        s.id,
+                        s.title,
+                        s.user,
+                        s.createdAt,
+
+                        JPAExpressions.select(qls)
+                                .from(qls)
+                                .where(
+                                        qls.schedule.eq(s),
+                                        qls.user.eq(s.user)
+                                )
+                                .exists(),
+
+                        JPAExpressions.select(qls.count())
+                                .from(qls)
+                                .where(qls.schedule.eq(s)) // 해당 스케줄에 대한 좋아요 개수를 가져옴
+                ))
+                .from(s)
+                .where(s.id.in(scheduleIds)); // 좋아요한 스케줄 ID 목록으로 필터링
+
+        long total = query.fetchCount();
+
+        List<ScheduleInfoDto> content = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(content, pageable, total);
+    }
 
     private JPAQuery<ScheduleInfoDto> createSelectFromQuery(User loginUser) {
         return queryFactory
@@ -122,14 +109,19 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
                         s.title,
                         s.user,
                         s.createdAt,
+                        // likeStatus를 계산하는 부분
                         JPAExpressions.select(qls)
                                 .from(qls)
                                 .where(
                                         qls.schedule.eq(s),
                                         qls.user.id.eq(loginUser.getId())
                                 )
-                                .exists())
-                )
+                                .exists(),
+                        // likeCount를 계산하는 부분
+                        JPAExpressions.select(qls.count())
+                                .from(qls)
+                                .where(qls.schedule.eq(s)) // 해당 스케줄에 대한 좋아요 개수를 가져옴
+                ))
                 .from(s);
     }
 
@@ -146,6 +138,42 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
         }
         return s.title.contains(keyword);
     }
+
+    @Override
+    public Page<ScheduleInfoDto> getSchedulesOrderedByLikes(List<Long> scheduleIds, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        JPAQuery<ScheduleInfoDto> query = queryFactory
+                .select(Projections.constructor(ScheduleInfoDto.class,
+                        s.id,
+                        s.title,
+                        s.user,
+                        s.createdAt,
+                        // likeStatus를 추가
+                        JPAExpressions.selectOne()
+                                .from(qls)
+                                .where(qls.schedule.eq(s))
+                                .exists(), // 좋아요 상태를 boolean으로 반환
+                        // 좋아요 개수
+                        JPAExpressions.select(qls.count())
+                                .from(qls)
+                                .where(qls.schedule.eq(s))
+                ))
+                .from(s)
+                .leftJoin(qls).on(qls.schedule.eq(s))
+                .where(s.id.in(scheduleIds)) // 주어진 scheduleIds에 해당하는 스케줄만 필터링
+                .groupBy(s.id)
+                .orderBy(qls.count().desc()) // 좋아요 개수로 정렬
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<ScheduleInfoDto> content = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+
 
 
 }

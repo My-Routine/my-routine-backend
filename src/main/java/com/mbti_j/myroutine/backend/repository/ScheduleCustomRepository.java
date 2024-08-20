@@ -4,14 +4,18 @@ import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleSearchFil
 import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.entity.User;
+import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ScheduleCustomRepository {
-
-//    ScheduleDetailDto searchScheduleDetailById(Long id);
 
     Schedule saveSchedule(Schedule schedule);
 
     Page<ScheduleInfoDto> selectScheduleListByFilter(ScheduleSearchFilter scheduleSearchFilter,
             User loginUser);
+
+    Page<ScheduleInfoDto> findLikeSchedulesByIds(List<Long> scheduleIds, int page, int size);
+
+    Page<ScheduleInfoDto> getSchedulesOrderedByLikes(List<Long> scheduleIds, int page, int size);
 }
