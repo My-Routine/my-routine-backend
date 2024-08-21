@@ -1,6 +1,11 @@
 package com.mbti_j.myroutine.backend.repository;
 
+import static com.mbti_j.myroutine.backend.model.entity.QDaySchedule.daySchedule;
+import static com.mbti_j.myroutine.backend.model.entity.QLikeSchedule.likeSchedule;
+import static com.mbti_j.myroutine.backend.model.entity.QWorkTime.workTime;
+
 import com.mbti_j.myroutine.backend.model.constant.SearchType;
+import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleRegisterDto;
 import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleSearchFilter;
 import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.QDaySchedule;
@@ -24,6 +29,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @AllArgsConstructor
@@ -32,9 +38,9 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
     private final JPAQueryFactory queryFactory;
     private final EntityManager entityManager;
     private final QSchedule s = QSchedule.schedule;
-    private final QDaySchedule ds = QDaySchedule.daySchedule;
-    private final QWorkTime dswi = QWorkTime.workTime;
-    private final QLikeSchedule qls = QLikeSchedule.likeSchedule;
+    private final QDaySchedule ds = daySchedule;
+    private final QWorkTime dswi = workTime;
+    private final QLikeSchedule qls = likeSchedule;
     private final QWork w = QWork.work;
     private final QUser u = QUser.user;
 
@@ -174,14 +180,47 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteSchedule(Long userId, Long scheduleId) {
+
+        queryFactory
+                .delete(workTime)
+                .where(workTime.daySchedule.schedule.id.eq(scheduleId))
+                .execute();
+
+        queryFactory
+                .delete(likeSchedule)
+                .where(likeSchedule.schedule.id.eq(scheduleId))
+                .execute();
+
+        queryFactory
+                .delete(daySchedule)
+                .where(daySchedule.schedule.id.eq(scheduleId))
+                .execute();
+
+
+        // 스케줄 삭제
         long deletedCount = queryFactory
                 .delete(s)
                 .where(s.id.eq(scheduleId)
                         .and(s.user.id.eq(userId)))
                 .execute();
+
         return deletedCount > 0;
     }
 
+    @Override
+    @Transactional
+    public boolean updateSchedule(Long userId, Long scheduleId, ScheduleRegisterDto ScheduleRegisterDto) {
+
+        long updatedCount = queryFactory
+                .update(s)
+                .set(s.title, ScheduleRegisterDto.getTitle())
+                .where(s.id.eq(scheduleId)
+                        .and(s.user.id.eq(userId)))
+                .execute();
+
+        return updatedCount > 0;
+    }
 
 }

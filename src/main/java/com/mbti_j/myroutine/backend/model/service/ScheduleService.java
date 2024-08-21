@@ -101,4 +101,12 @@ public class ScheduleService {
         return scheduleRepository.deleteSchedule(loginUser.getId(), scheduleId);
     }
 
+    public boolean updateSchedule(Long scheduleId, ScheduleRegisterDto scheduleRegisterDto) throws IllegalArgumentException{
+        User loginUser = authService.getLoginUser();
+        if (loginUser == null) {
+            throw new IllegalArgumentException("로그인 유저가 없습니다.");
+        }
+        return scheduleRepository.updateSchedule(loginUser.getId(), scheduleId, scheduleRegisterDto);
+    }
+
 }

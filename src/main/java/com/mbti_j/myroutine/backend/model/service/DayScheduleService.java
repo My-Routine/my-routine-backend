@@ -4,6 +4,7 @@ import com.mbti_j.myroutine.backend.model.dto.day_schedule.response.DayScheduleD
 import com.mbti_j.myroutine.backend.model.entity.DaySchedule;
 import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.repository.DayScheduleRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +56,19 @@ public class DayScheduleService {
     public DaySchedule selectDayScheduleByScheduleIdAndDay(Long scheduleId, Integer day) {
         Schedule schedule = scheduleService.selectScheduleById(scheduleId);
         return dayScheduleRepository.findByScheduleAndDay(schedule, day).orElse(null);
+    }
+
+    public void createSevenDaysBySchedule(Schedule schedule) {
+        List<DaySchedule> dayScheduleList = new ArrayList<>();
+
+        for (int day = 1; day <= 7; day++) {
+            dayScheduleList.add(DaySchedule.builder()
+                    .schedule(schedule)
+                    .day(day)
+                    .type("fact")
+                    .build());
+        }
+
+        dayScheduleRepository.saveAll(dayScheduleList);
     }
 }
