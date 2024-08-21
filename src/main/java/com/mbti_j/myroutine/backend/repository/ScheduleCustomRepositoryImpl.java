@@ -173,7 +173,15 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-
+    @Override
+    public boolean deleteSchedule(Long userId, Long scheduleId) {
+        long deletedCount = queryFactory
+                .delete(s)
+                .where(s.id.eq(scheduleId)
+                        .and(s.user.id.eq(userId)))
+                .execute();
+        return deletedCount > 0;
+    }
 
 
 }

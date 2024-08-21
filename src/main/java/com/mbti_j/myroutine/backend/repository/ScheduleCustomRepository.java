@@ -18,4 +18,6 @@ public interface ScheduleCustomRepository {
     Page<ScheduleInfoDto> findLikeSchedulesByIds(List<Long> scheduleIds, int page, int size);
 
     Page<ScheduleInfoDto> getSchedulesOrderedByLikes(List<Long> scheduleIds, int page, int size, Long userId);
+
+    boolean deleteSchedule(Long userId, Long scheduleId);
 }

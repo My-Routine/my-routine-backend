@@ -90,4 +90,8 @@ public class ScheduleService {
         return scheduleRepository.getSchedulesOrderedByLikes(allLikeScheduleIds, page, size, loginUser.getId());
     }
 
+    public Boolean deleteSchedule(Long userId, Long scheduleId) {
+        return scheduleRepository.deleteSchedule(userId, scheduleId);
+    }
+
 }
