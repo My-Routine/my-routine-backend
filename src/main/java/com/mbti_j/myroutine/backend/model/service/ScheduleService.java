@@ -11,6 +11,7 @@ import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Slf4j
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -26,6 +27,7 @@ public class ScheduleService {
     private final LikeScheduleService likeScheduleService;
 
     public Schedule selectScheduleById(Long scheduleId) {
+        log.info(scheduleId.toString());
         return scheduleRepository.findById(scheduleId).orElseThrow();
     }
 
@@ -59,6 +61,7 @@ public class ScheduleService {
         return scheduleInfoDtoPage;
     }
 
+    @Transactional
     public Schedule registerSchedule(ScheduleRegisterDto scheduleRegisterDto) {
         User loginUser = authService.getLoginUser();
 
@@ -90,8 +93,12 @@ public class ScheduleService {
         return scheduleRepository.getSchedulesOrderedByLikes(allLikeScheduleIds, page, size, loginUser.getId());
     }
 
-    public Boolean deleteSchedule(Long userId, Long scheduleId) {
-        return scheduleRepository.deleteSchedule(userId, scheduleId);
+    public Boolean deleteSchedule(Long scheduleId) throws IllegalArgumentException{
+        User loginUser = authService.getLoginUser();
+        if (loginUser == null) {
+            throw new IllegalArgumentException("로그인 유저가 없습니다.");
+        }
+        return scheduleRepository.deleteSchedule(loginUser.getId(), scheduleId);
     }
 
 }

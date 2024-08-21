@@ -72,11 +72,7 @@ public class ScheduleController {
     }
     @DeleteMapping("/{schedules-id}")
     public ResponseEntity<?> deleteSchedule(@PathVariable("schedules-id") Long scheduleId) {
-        User loginUser = authService.getLoginUser();
-        if (loginUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        boolean isDeleted = scheduleService.deleteSchedule(loginUser.getId(), scheduleId);
+        boolean isDeleted = scheduleService.deleteSchedule(scheduleId);
         if (!isDeleted) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
