@@ -2,6 +2,7 @@ package com.mbti_j.myroutine.backend.model.service;
 
 import com.mbti_j.myroutine.backend.model.dto.day_schedule.response.DayScheduleDetailDto;
 import com.mbti_j.myroutine.backend.model.entity.DaySchedule;
+import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.repository.DayScheduleRepository;
 import java.util.List;
 import java.util.Optional;
@@ -51,4 +52,8 @@ public class DayScheduleService {
         return daySchedule.getId();
     }
 
+    public DaySchedule selectDayScheduleByScheduleIdAndDay(Long scheduleId, Integer day) {
+        Schedule schedule = scheduleService.selectScheduleById(scheduleId);
+        return dayScheduleRepository.findByScheduleAndDay(schedule, day).orElse(null);
+    }
 }

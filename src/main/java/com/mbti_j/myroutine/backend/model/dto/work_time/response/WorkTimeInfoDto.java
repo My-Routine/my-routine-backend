@@ -1,5 +1,6 @@
 package com.mbti_j.myroutine.backend.model.dto.work_time.response;
 
+import com.mbti_j.myroutine.backend.model.entity.WorkTime;
 import java.sql.Time;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,14 @@ public class WorkTimeInfoDto {
     private Long largeCategoryId;
     private Long dayScheduleId;
 
-
+    public WorkTimeInfoDto(WorkTime workTime) {
+        this.workTimeId = workTime.getId();
+        this.startAt = workTime.getStartAt();
+        this.endAt = workTime.getEndAt();
+        this.workTitle = workTime.getWork().getTitle();
+        this.workId = workTime.getWork().getId();
+        this.smallCategoryId = workTime.getWork().getWorkCategorySmall().getId();
+        this.largeCategoryId = workTime.getWork().getWorkCategorySmall().getWorkCategoryLarge().getId();
+        this.dayScheduleId = workTime.getDaySchedule().getId();
+    }
 }

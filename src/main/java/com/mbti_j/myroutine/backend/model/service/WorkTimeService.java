@@ -1,11 +1,13 @@
 package com.mbti_j.myroutine.backend.model.service;
 
 import com.mbti_j.myroutine.backend.model.dto.work_time.request.WorkTimeRegisterDto;
+import com.mbti_j.myroutine.backend.model.dto.work_time.request.WorkTimeUpdateDto;
 import com.mbti_j.myroutine.backend.model.dto.work_time.response.WorkTimeInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.DaySchedule;
 import com.mbti_j.myroutine.backend.model.entity.Work;
 import com.mbti_j.myroutine.backend.model.entity.WorkTime;
 import com.mbti_j.myroutine.backend.repository.DayScheduleRepository;
+import com.mbti_j.myroutine.backend.repository.WorkRepository;
 import com.mbti_j.myroutine.backend.repository.WorkTimeRepository;
 import java.sql.Time;
 import java.util.List;
@@ -23,8 +25,12 @@ public class WorkTimeService {
     private final DayScheduleService dayScheduleService;
     private final WorkService workService;
 
-    public void registerWorkTime(Long dayScheduleId, WorkTimeRegisterDto workTimeRegisterDto) {
-        DaySchedule daySchedule = dayScheduleService.selectDayScheduleById(dayScheduleId);
+    public WorkTime selectWorkTimeById(Long workTimeId) {
+        return workTimeRepository.findById(workTimeId).orElseThrow();
+    }
+
+    public void registerWorkTime(Long scheduleId, Integer day,WorkTimeRegisterDto workTimeRegisterDto) {
+        DaySchedule daySchedule = dayScheduleService.selectDayScheduleByScheduleIdAndDay(scheduleId, day);
 
         // DTO에서 변환된 Time 객체를 사용하여 WorkTime을 생성
         WorkTime workTime = WorkTime.builder()
@@ -38,30 +44,26 @@ public class WorkTimeService {
     }
 
     public List<WorkTimeInfoDto> findWorkTimesByScheduleIdAndDay(Long scheduleId, Integer day) {
-        return workTimeRepository.findWorkTimesByScheduleIdAndDay(scheduleId, day);
+        DaySchedule daySchedule = dayScheduleService.selectDayScheduleByScheduleIdAndDay(scheduleId, day);
+        return workTimeRepository.findWorkTimesByDayScheduleOrderByStartAt(daySchedule)
+                .stream()
+                .map(WorkTimeInfoDto::new)
+                .collect(Collectors.toList());
     }
 
 
-    public void updateWorkTime(Long workTimeId, WorkTimeRegisterDto dto) {
-        WorkTime existingWorkTime = workTimeRepository.findById(workTimeId)
-                .orElseThrow();
-
-        Work updatedWork = workService.selectWorkById(dto.getWorkId());
-
-        // 기존 데이터를 새로 빌드하여 업데이트
+    public void updateWorkTime(Long workTimeId, WorkTimeUpdateDto workTimeUpdateDto) {
         WorkTime updatedWorkTime = WorkTime.builder()
-                .id(existingWorkTime.getId())  // ID는 그대로 유지
-                .daySchedule(existingWorkTime.getDaySchedule())  // DaySchedule은 그대로 유지
-                .work(updatedWork)  // 새로 업데이트할 작업
-                .startAt(dto.getStartAtAsTime())  // DTO에서 변환된 시간
-                .endAt(dto.getEndAtAsTime())  // DTO에서 변환된 시간
+                .id(workTimeId)  // ID는 그대로 유지
+                .daySchedule(selectWorkTimeById(workTimeId).getDaySchedule())  // DaySchedule은 그대로 유지
+                .work(workService.selectWorkById(workTimeUpdateDto.getWorkId()))  // 새로 업데이트할 작업
+                .startAt(workTimeUpdateDto.getStartAtAsTime())  // DTO에서 변환된 시간
+                .endAt(workTimeUpdateDto.getEndAtAsTime())  // DTO에서 변환된 시간
                 .build();
-
         workTimeRepository.save(updatedWorkTime);
     }
 
-
-
-
-
+    public void deleteWorkTime(Long workTimeId) {
+        workTimeRepository.deleteById(workTimeId);
+    }
 }
