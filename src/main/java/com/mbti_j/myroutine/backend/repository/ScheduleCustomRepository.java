@@ -1,5 +1,6 @@
 package com.mbti_j.myroutine.backend.repository;
 
+import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleRegisterDto;
 import com.mbti_j.myroutine.backend.model.dto.schedule.request.ScheduleSearchFilter;
 import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.Schedule;
@@ -20,4 +21,7 @@ public interface ScheduleCustomRepository {
     Page<ScheduleInfoDto> getSchedulesOrderedByLikes(List<Long> scheduleIds, int page, int size, Long userId);
 
     boolean deleteSchedule(Long userId, Long scheduleId);
+
+    boolean updateSchedule(Long userId, Long scheduleId, ScheduleRegisterDto ScheduleRegisterDto);
+
 }

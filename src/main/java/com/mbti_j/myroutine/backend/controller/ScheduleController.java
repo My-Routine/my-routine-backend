@@ -7,6 +7,7 @@ import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.Schedule;
 import com.mbti_j.myroutine.backend.model.entity.User;
 import com.mbti_j.myroutine.backend.model.service.AuthService;
+import com.mbti_j.myroutine.backend.model.service.DayScheduleService;
 import com.mbti_j.myroutine.backend.model.service.ScheduleService;
 import com.mbti_j.myroutine.backend.model.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-    private final AuthService authService;
+    private final DayScheduleService dayScheduleService;
 
     @GetMapping
     public ResponseEntity<?> searchSchedulesByFilter(
@@ -50,7 +52,9 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<?> registerSchedule(
             @RequestBody ScheduleRegisterDto scheduleRegisterDto) {
-        return new ResponseEntity<>(scheduleService.registerSchedule(scheduleRegisterDto), HttpStatus.CREATED);
+        Schedule schedule = scheduleService.registerSchedule(scheduleRegisterDto);
+        dayScheduleService.createSevenDaysBySchedule(schedule);
+        return new ResponseEntity<>(schedule.getId(), HttpStatus.CREATED);
     }
 
     @GetMapping("/liked")
@@ -79,6 +83,14 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/{schedules-id}")
+    public ResponseEntity<?> updateSchedule(@PathVariable("schedules-id") Long scheduleId, @RequestBody ScheduleRegisterDto scheduleRegisterDto) {
+        boolean isUpdated = scheduleService.updateSchedule(scheduleId, scheduleRegisterDto);
+        if (!isUpdated) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }
