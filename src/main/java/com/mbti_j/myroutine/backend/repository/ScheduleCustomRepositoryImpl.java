@@ -140,7 +140,7 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
     }
 
     @Override
-    public Page<ScheduleInfoDto> getSchedulesOrderedByLikes(List<Long> scheduleIds, int page, int size) {
+    public Page<ScheduleInfoDto> getSchedulesOrderedByLikes(List<Long> scheduleIds, int page, int size, Long userId) {
         Pageable pageable = PageRequest.of(page, size);
 
         JPAQuery<ScheduleInfoDto> query = queryFactory
@@ -149,11 +149,11 @@ public class ScheduleCustomRepositoryImpl implements ScheduleCustomRepository {
                         s.title,
                         s.user,
                         s.createdAt,
-                        // likeStatus를 추가
+                        // likeStatus: 로그인한 사용자가 해당 스케줄을 좋아했는지 여부
                         JPAExpressions.selectOne()
                                 .from(qls)
-                                .where(qls.schedule.eq(s))
-                                .exists(), // 좋아요 상태를 boolean으로 반환
+                                .where(qls.schedule.eq(s).and(qls.user.id.eq(userId))) // 로그인 유저의 좋아요 상태 체크
+                                .exists(),
                         // 좋아요 개수
                         JPAExpressions.select(qls.count())
                                 .from(qls)

@@ -81,10 +81,13 @@ public class ScheduleService {
     }
 
     public Page<ScheduleInfoDto> getSchedulesOrderByLikes(int page, int size) {
+        // 로그인 유저 정보 가져오기
+        User loginUser = authService.getLoginUser();
 
         List<Long> allLikeScheduleIds = likeScheduleService.getAllLikeScheduleIds();
 
-        return scheduleRepository.getSchedulesOrderedByLikes(allLikeScheduleIds, page, size);
+        // 로그인 유저의 ID와 함께 repository로 전달
+        return scheduleRepository.getSchedulesOrderedByLikes(allLikeScheduleIds, page, size, loginUser.getId());
     }
 
 }

@@ -3,6 +3,9 @@ package com.mbti_j.myroutine.backend.repository;
 import com.mbti_j.myroutine.backend.model.dto.work_time.response.WorkTimeInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.DaySchedule;
 import com.mbti_j.myroutine.backend.model.entity.WorkTime;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +21,10 @@ public interface WorkTimeRepository extends JpaRepository<WorkTime, Long> {
             "WHERE ds.schedule.id = :scheduleId " +
             "AND ds.day = :day")
     List<WorkTimeInfoDto> findWorkTimesByScheduleIdAndDay(@Param("scheduleId") Long scheduleId, @Param("day") Integer day);
+
+    List<WorkTime> findAllByDaySchedule_DayAndStartAtBetween(int day, LocalTime startAt, LocalTime endAt);
+
+
 
 
 }
