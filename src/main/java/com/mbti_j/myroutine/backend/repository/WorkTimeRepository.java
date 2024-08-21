@@ -23,7 +23,7 @@ public interface WorkTimeRepository extends JpaRepository<WorkTime, Long> {
     List<WorkTimeInfoDto> findWorkTimesByScheduleIdAndDay(@Param("scheduleId") Long scheduleId, @Param("day") Integer day);
 
     List<WorkTime> findAllByDaySchedule_DayAndStartAtBetween(int day, LocalTime startAt, LocalTime endAt);
-
+    List<WorkTime> findWorkTimesByDayScheduleOrderByStartAt(DaySchedule daySchedule);
 
 
 
