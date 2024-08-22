@@ -21,4 +21,6 @@ public class ScheduleDetailDto {
     private String title;
     private UserProfileDto userProfileDto;
     private Date createdAt;
+    private Boolean likeStatus;
+    private Long likeCount;
 }

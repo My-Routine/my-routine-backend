@@ -1,6 +1,7 @@
 package com.mbti_j.myroutine.backend.model.service;
 
 import com.mbti_j.myroutine.backend.model.dto.schedule.LikeScheduleDto;
+import com.mbti_j.myroutine.backend.model.dto.schedule.response.ScheduleInfoDto;
 import com.mbti_j.myroutine.backend.model.entity.Board;
 import com.mbti_j.myroutine.backend.model.entity.LikeBoard;
 import com.mbti_j.myroutine.backend.model.entity.LikeSchedule;
@@ -13,7 +14,9 @@ import com.mbti_j.myroutine.backend.repository.LikeScheduleRepository;
 import com.mbti_j.myroutine.backend.repository.LikeUserRepository;
 import com.mbti_j.myroutine.backend.repository.ScheduleRepository;
 import com.mbti_j.myroutine.backend.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +34,7 @@ public class LikeService {
     private final BoardRepository boardRepository;
     private final LikeUserRepository likeUserRepository;
     private final LikeBoardRepository likeBoardRepository;
+    private final AuthService authService;
 
     public LikeSchedule likeSchedule(Long userId, Long scheduleId) {
 
@@ -117,19 +121,6 @@ public class LikeService {
         }
         likeBoardRepository.delete(likeBoard.get());
         return 1;
-    }
-
-    public Page<LikeScheduleDto> getSchedulesWithMostLikes(int page, int size) {
-        return likeScheduleRepository.findSchedulesWithMostLikes(PageRequest.of(page, size));
-    }
-
-    public long getTotalCount() {
-        return likeScheduleRepository.count();
-    }
-
-    public Page<LikeScheduleDto> getUserLikedSchedules(Long userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return likeScheduleRepository.findLikedSchedulesByUserId(userId, pageable);
     }
 
 }

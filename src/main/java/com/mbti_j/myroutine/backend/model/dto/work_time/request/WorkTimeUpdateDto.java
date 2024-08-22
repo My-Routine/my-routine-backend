@@ -1,4 +1,6 @@
 package com.mbti_j.myroutine.backend.model.dto.work_time.request;
+
+import java.sql.Time;
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,16 +9,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Time;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @Slf4j
 @AllArgsConstructor
 @Builder
-public class WorkTimeRegisterDto {
+public class WorkTimeUpdateDto {
     private Long workId;
+    private Long largeCategoryId;
+    private Long smallCategoryId;
     private String startAt;
     private String endAt;
 
@@ -31,6 +33,4 @@ public class WorkTimeRegisterDto {
         LocalTime localTime = LocalTime.parse(endAt.length() == 5 ? endAt + ":00" : endAt);
         return Time.valueOf(localTime);
     }
-
-
 }
