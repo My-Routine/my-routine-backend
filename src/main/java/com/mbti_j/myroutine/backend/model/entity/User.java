@@ -1,13 +1,16 @@
 package com.mbti_j.myroutine.backend.model.entity;
 
 import com.mbti_j.myroutine.backend.model.dto.user.UserSignUpDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.sql.Timestamp;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -49,6 +52,9 @@ public class User {
 
     @Column(length = 255)
     private String token;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Participants> chatRooms; // 사용자가 참여한 채팅방 리스트
 
     public User() {
     }

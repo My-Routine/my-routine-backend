@@ -40,23 +40,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/**").permitAll()
-//                        .requestMatchers("/auth/login", "/popular", "/signup", "/login").permitAll()
-                        .anyRequest().authenticated()       //그 외 요청은 인증 받은 사람만 접근 가능
+//                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/auth/login", "/popular", "/signup", "/login",
+                                        "/uploadFolder/**").permitAll()
+                                .anyRequest().authenticated()       //그 외 요청은 인증 받은 사람만 접근 가능
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS
-                ))
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        //.defaultSuccessUrl("/")         //동작 X  => 세션 기반 인증에 적용되는것
-                        .failureUrl("/login?error=true")
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
-                        .permitAll()
-                );
+                ));
 
         http.addFilterBefore(new JwtAuthFilter(jwtUtil, customUserDetailsService),
                 UsernamePasswordAuthenticationFilter.class);

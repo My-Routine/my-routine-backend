@@ -38,9 +38,9 @@ public class AuthService {
         } else {
             email = authentication.getPrincipal().toString();
         }
-        return userRepository.findById(1L).orElse(null);
-//        return userRepository.findByEmail(email)
-//                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+//        return userRepository.findById().orElse(null);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
     public String login(LoginRequestDto loginRequestDto) {
