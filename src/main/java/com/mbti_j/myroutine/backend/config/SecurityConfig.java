@@ -42,6 +42,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 //                                .requestMatchers("/**").permitAll()
                                 .requestMatchers("/auth/login", "/popular", "/signup", "/login",
+                                        "/user/email-check",
+                                        "/user/nickname-check",
+                                        "users",
                                         "/uploadFolder/**").permitAll()
                                 .anyRequest().authenticated()       //그 외 요청은 인증 받은 사람만 접근 가능
                 )
